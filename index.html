@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
+    <div id="grain-overlay"></div>
     <div id="loading-screen">
         <div class="loader">
             <div class="circle"></div>
@@ -31,9 +32,19 @@
 
     <div id="hud">
         <div class="top-left">
-            <div class="score-container">
-                <span class="label">ENERGY</span>
                 <span id="score">000000</span>
+            </div>
+            <div id="paradox-indicator" class="hud-box hidden">
+                <span class="label">PARADOX</span>
+                <div class="paradox-bar">
+                    <div id="paradox-fill"></div>
+                </div>
+            </div>
+            <div id="momentum-container" class="hud-box">
+                <span class="label">MOMENTUM</span>
+                <div class="momentum-bar">
+                    <div id="momentum-fill"></div>
+                </div>
             </div>
         </div>
         <div class="top-right">
@@ -55,6 +66,7 @@
         <div id="navigation-map">
             <canvas id="radar-canvas"></canvas>
         </div>
+        <div id="delta-timer" class="hidden">0.000s</div>
     </div>
 
     <div id="menu-overlay" class="hidden">
