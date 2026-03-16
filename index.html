@@ -1,150 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Sachin Patil | Milky Way Voyager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sach.in | 3D Cosmic Car Driving</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
-
-<body class="dark-theme">
-    <!-- Pure Code Visual Layers -->
-    <canvas id="travel-canvas"></canvas>
-    <canvas id="galaxy-canvas"></canvas>
-    <canvas id="planet-canvas"></canvas>
-    <canvas id="nebula-canvas"></canvas>
-    <canvas id="singularity-canvas"></canvas>
-    <canvas id="monolith-canvas"></canvas>
-    <canvas id="impact-canvas"></canvas>
-
-    <div id="noise-overlay"></div>
-    <div id="vignette"></div>
-    <div id="chromatic-aberration"></div>
-    <div id="glitch-overlay"></div>
-    <div id="custom-cursor"></div>
-
-    <!-- Mission Control UI -->
-    <header id="mission-status">
-        <div class="status-box">
-            <span class="label">VESSEL ID:</span>
-            <span id="vessel-id">SACHIN_PATIL-V1</span>
-        </div>
-        <div class="status-box">
-            <span class="label">MISSION STATUS:</span>
-            <span id="mission-objective">INITIALIZING...</span>
-        </div>
-        <div id="voyage-progress-container">
-            <div id="progress-bar-inner"></div>
-            <div class="progress-labels">
-                <span>START</span>
-                <span>DISCOVERY</span>
-                <span>CONFLICT</span>
-                <span>GENESIS</span>
-                <span>VOID</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Suggestion Box -->
-    <div id="suggestion-panel">
-        <div id="suggestion-text">SCANNING VOID...</div>
-        <div class="loading-bar">
-            <div class="loading-fill"></div>
+<body>
+    <div id="loading-screen">
+        <div class="loader">
+            <div class="circle"></div>
+            <div class="text">INITIALIZING QUANTUM DRIVE...</div>
         </div>
     </div>
 
-    <main id="app">
-        <!-- Page 0: Cinematic Entrance -->
-        <section id="page-0" class="page active">
-            <div id="entrance-visuals">
-                <div class="pulse-ring"></div>
-                <div class="pulse-ring" style="animation-delay: 1s;"></div>
-                <div class="pulse-ring" style="animation-delay: 2s;"></div>
+    <div id="intro-screen">
+        <div class="intro-content">
+            <h1 class="glitch" data-text="Sach.in">Sach.in</h1>
+            <p class="subtitle">COSMIC HIGHWAY SYSTEM</p>
+            <button id="start-btn">ENTER WORMHOLE</button>
+            <div class="intro-credits">
+                <a href="https://www.instagram.com/sachinpatil12n/" target="_blank">@sachinpatil12n</a>
             </div>
-            <div id="name-popup-container">
-                <div id="name-popup">SACHIN PATIL</div>
-            </div>
-            <div class="content central">
-                <p class="instruction-cinematic entrance-instruction">SCANNING IDENTITY... VOYAGER DETECTED</p>
-            </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- Page 1: The Void -->
-        <section id="page-1" class="page">
-            <div class="content central">
-                <h1 class="glitch-title">THE VOID</h1>
-                <p class="instruction-cinematic">ENGAGING WARP DRIVE...</p>
+    <div id="hud">
+        <div class="top-left">
+            <div class="score-container">
+                <span class="label">ENERGY</span>
+                <span id="score">000000</span>
             </div>
-        </section>
-
-        <!-- Page 2: Alien World -->
-        <section id="page-2" class="page">
-            <div class="content overlay">
-                <h2 class="ghost-ui">SECTOR 7: ALIEN WORLD</h2>
+        </div>
+        <div class="top-right">
+            <div id="timer-container" class="hidden">
+                <span class="label">TIME</span>
+                <span id="timer-value">00:00</span>
             </div>
-        </section>
-
-        <!-- [NEW] Sector: The Nebula Sea -->
-        <section id="page-3" class="page">
-            <div class="content central">
-                <h1 class="glitch-title" style="color: #ff00ff; text-shadow: 0 0 30px #ff00ff;">NEBULA SEA</h1>
-                <p class="instruction-cinematic">SAILING THROUGH COSMIC DUST</p>
+            <div class="mode-indicator" id="game-mode">FREE DRIVE</div>
+        </div>
+        <div class="bottom-center">
+            <div class="speedometer">
+                <div class="speed-value" id="speed">0</div>
+                <div class="speed-unit">LY/S</div>
+                <div class="boost-bar-container">
+                    <div id="boost-bar" class="boost-bar-fill"></div>
+                </div>
             </div>
-        </section>
+        </div>
+        <div id="navigation-map">
+            <canvas id="radar-canvas"></canvas>
+        </div>
+    </div>
 
-        <!-- [NEW] Sector: The Singularity -->
-        <section id="page-4" class="page">
-            <div class="content central">
-                <h1 class="glitch-title" style="color: #ffffff; text-shadow: 0 0 50px #ffffff;">SINGULARITY</h1>
-                <p class="instruction-cinematic">BEYOND THE EVENT HORIZON</p>
+    <div id="menu-overlay" class="hidden">
+        <div class="menu-card">
+            <h2>GALAXY TERMINAL</h2>
+            <div class="menu-options">
+                <button class="menu-btn" data-mode="free">FREE DRIVE</button>
+                <button class="menu-btn" data-mode="race">GALAXY RACE</button>
+                <button class="menu-btn" data-mode="survival">ASTEROID SURVIVAL</button>
+                <button class="menu-btn" data-mode="time">TIME WARP</button>
             </div>
-        </section>
-
-        <!-- [NEW] Sector: The Ancient Monolith -->
-        <section id="page-5" class="page">
-            <div class="content central">
-                <h1 class="glitch-title" style="color: #00ff00; text-shadow: 0 0 40px #00ff00;">THE MONOLITH</h1>
-                <p class="instruction-cinematic">A GEOMETRIC ECHO OF THE PAST</p>
+            <div class="credits">
+                <p>Created by Sachin Patil</p>
+                <a href="https://www.instagram.com/sachinpatil12n/" target="_blank">Instagram</a>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- Page 6: Neutralized -->
-        <section id="page-6" class="page">
-            <div class="content overlay">
-                <h2 class="ghost-ui">SECTOR 7: ANOMALY NEUTRALIZED</h2>
-            </div>
-        </section>
+    <canvas id="game-canvas"></canvas>
 
-        <!-- Page 7: Genesis -->
-        <section id="page-7" class="page">
-            <div class="content overlay">
-                <h2 class="ghost-ui">COSMIC GENESIS</h2>
-            </div>
-        </section>
-
-        <!-- Page 8: Destruction -->
-        <section id="page-8" class="page">
-            <canvas id="destruction-canvas"></canvas>
-            <div class="content overlay">
-                <h1 class="glitch-title" style="color: #ff4500; text-shadow: 0 0 50px #ff0000;">WORLD DESTROYED</h1>
-                <p class="instruction-cinematic">THE GALAXY SHATTERS...</p>
-            </div>
-        </section>
-
-        <!-- Page 9: Instagram -->
-        <section id="page-9" class="page">
-            <div class="content central">
-                <h1 class="glitch-title" style="color: #00f2ff; font-size: 3.5rem;">MEET FUTURE GUY?</h1>
-                <p class="instruction-cinematic">FINAL AUTHORIZATION GRANTED</p>
-            </div>
-        </section>
-    </main>
-
-    <script src="script.js"></script>
+    <script src="game.js"></script>
 </body>
-
 </html>
